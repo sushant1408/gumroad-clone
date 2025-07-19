@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /.pnp
+/.vscode
 .pnp.*
 .yarn/*
 !.yarn/patches
