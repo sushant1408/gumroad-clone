@@ -21,6 +21,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+  cookiePrefix: "gumclone-payload",
   collections: [Users, Media, Categories],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",

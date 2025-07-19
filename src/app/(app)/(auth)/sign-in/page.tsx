@@ -1,5 +1,14 @@
-import { SignInView } from "@/modules/auth/ui/views/sign-in-view";
+import { redirect } from "next/navigation";
 
-export default function SignInPage() {
+import { SignInView } from "@/modules/auth/ui/views/sign-in-view";
+import { caller } from "@/trpc/server";
+
+export default async function SignInPage() {
+  const session = await caller.auth.session();
+
+  if (session.user) {
+    redirect("/");
+  }
+
   return <SignInView />;
 }
