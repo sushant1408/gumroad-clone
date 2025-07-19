@@ -35,12 +35,6 @@ const CategoryDropdown = ({
     setIsOpen(false);
   };
 
-  const toggleDropdown = () => {
-    if (category.subcategories?.length > 0) {
-      setIsOpen((prev) => !prev);
-    }
-  };
-
   const dropdownPosition = getDropdownPosition();
 
   return (
@@ -49,7 +43,6 @@ const CategoryDropdown = ({
       ref={dropdownRef}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onClick={toggleDropdown}
     >
       <div className="relative">
         <Link href={`/${category.slug === "all" ? "" : category.slug}`}>

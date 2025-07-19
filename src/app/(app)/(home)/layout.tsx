@@ -1,10 +1,13 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { ReactNode, Suspense } from "react";
 
+import { Footer } from "@/modules/home/ui/components/footer";
+import { Navbar } from "@/modules/home/ui/components/navbar";
+import {
+  SearchFilters,
+  SearchFiltersLoading,
+} from "@/modules/home/ui/components/search-filters";
 import { getQueryClient, trpc } from "@/trpc/server";
-import { Footer } from "./footer";
-import { Navbar } from "./navbar";
-import { SearchFilters, SearchFiltersLoading } from "./search-filters";
 
 export default async function HomeLayout({
   children,
