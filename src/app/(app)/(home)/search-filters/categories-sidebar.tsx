@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -9,26 +10,27 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { CustomCategory } from "../types";
+import { useTRPC } from "@/trpc/client";
+import {
+  CategoriesGetManyOutput,
+  CategoriesGetManyOutputSingle,
+} from "@/modules/categories/types";
 
 interface CategoriesSidebarProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  data: CustomCategory[];
 }
 
-const CategoriesSidebar = ({
-  data,
-  onOpenChange,
-  open,
-}: CategoriesSidebarProps) => {
+const CategoriesSidebar = ({ onOpenChange, open }: CategoriesSidebarProps) => {
   const router = useRouter();
 
-  const [parentCategories, setParentCategories] = useState<
-    CustomCategory[] | null
-  >(null);
+  const trpc = useTRPC();
+  const { data } = useSuspenseQuery(trpc.categories.getMany.queryOptions());
+
+  const [parentCategories, setParentCategories] =
+    useState<CategoriesGetManyOutput | null>(null);
   const [selectedCategory, setSelectedCategory] =
-    useState<CustomCategory | null>(null);
+    useState<CategoriesGetManyOutputSingle | null>(null);
 
   // if we have parent categories, show those, otherwise show root categories
   const currentCategories = parentCategories ?? data ?? [];
@@ -40,9 +42,9 @@ const CategoriesSidebar = ({
     onOpenChange(open);
   };
 
-  const handleCategoryClick = (category: CustomCategory) => {
+  const handleCategoryClick = (category: CategoriesGetManyOutputSingle) => {
     if (category.subcategories && category.subcategories.length > 0) {
-      setParentCategories(category.subcategories as CustomCategory[]);
+      setParentCategories(category.subcategories as CategoriesGetManyOutput);
       setSelectedCategory(category);
     } else {
       // this is a leaf category, no subcategories

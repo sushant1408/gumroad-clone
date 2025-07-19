@@ -5,24 +5,18 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CustomCategory } from "../types";
 import { CategoriesSidebar } from "./categories-sidebar";
 
 interface SearchInputProps {
   disabled?: boolean;
-  data: CustomCategory[];
 }
 
-const SearchInput = ({ disabled, data }: SearchInputProps) => {
+const SearchInput = ({ disabled }: SearchInputProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex items-center gap-2 w-full">
-      <CategoriesSidebar
-        open={isSidebarOpen}
-        onOpenChange={setIsSidebarOpen}
-        data={data}
-      />
+      <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} />
 
       <div className="relative w-full">
         <SearchIcon className="absolute top-1/2 -translate-y-1/2 left-3 size-4 text-neutral-400" />
