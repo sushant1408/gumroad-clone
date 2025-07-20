@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -8,6 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useTRPC } from "@/trpc/client";
 
 interface NavbarItemProps {
   href: string;
@@ -22,6 +26,9 @@ interface NavbarSidebarProps {
 }
 
 const NavbarSidebar = ({ items, onOpenChange, open }: NavbarSidebarProps) => {
+  const trpc = useTRPC();
+  const session = useQuery(trpc.auth.session.queryOptions());
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="p-0 transition-none">
@@ -42,22 +49,36 @@ const NavbarSidebar = ({ items, onOpenChange, open }: NavbarSidebarProps) => {
             </Link>
           ))}
         </ScrollArea>
-        <div className="border-t">
-          <Link
-            href="/sign-in"
-            className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
-            onClick={() => onOpenChange(false)}
-          >
-            Log in
-          </Link>
-          <Link
-            href="/sign-up"
-            className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
-            onClick={() => onOpenChange(false)}
-          >
-            Start selling
-          </Link>
-        </div>
+        {session.data?.user ? (
+          <div className="border-t">
+            <Link
+              href="/admin"
+              className="w-full text-left p-4 hover:bg-pink-400 hover:text-black flex items-center text-base font-medium"
+              onClick={() => onOpenChange(false)}
+            >
+              Dashboard
+            </Link>
+          </div>
+        ) : (
+          <div className="border-t">
+            <Link
+              prefetch
+              href="/sign-in"
+              className="w-full text-left p-4 hover:bg-black hover:text-white flex items-center text-base font-medium"
+              onClick={() => onOpenChange(false)}
+            >
+              Log in
+            </Link>
+            <Link
+              prefetch
+              href="/sign-up"
+              className="w-full text-left p-4 hover:bg-pink-400 hover:text-black flex items-center text-base font-medium"
+              onClick={() => onOpenChange(false)}
+            >
+              Start selling
+            </Link>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );
