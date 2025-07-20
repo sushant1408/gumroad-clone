@@ -10,13 +10,14 @@
     "lint": "next lint",
     "generate:types": "payload generate:types",
     "db:fresh": "payload migrate:fresh",
-    "db:seed": "npm run src/lib/seed.ts"
+    "db:seed": "npm run src/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@payloadcms/db-mongodb": "^3.48.0",
     "@payloadcms/next": "^3.48.0",
     "@payloadcms/payload-cloud": "^3.48.0",
+    "@payloadcms/plugin-multi-tenant": "^3.48.0",
     "@payloadcms/richtext-lexical": "^3.48.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",

@@ -10,7 +10,7 @@ import { ProductCard, ProductCardLoading } from "./product-card";
 import { InboxIcon } from "lucide-react";
 
 interface ProductsListProps {
-  category: string;
+  category?: string;
 }
 
 const ProductsList = ({ category }: ProductsListProps) => {

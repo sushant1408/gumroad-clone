@@ -5,14 +5,9 @@ import { CategoriesGetManyOutputSingle } from "@/modules/categories/types";
 interface SubcategoryMenuProps {
   open: boolean;
   category: CategoriesGetManyOutputSingle;
-  position: { top: number; left: number };
 }
 
-const SubcategoryMenu = ({
-  category,
-  open,
-  position,
-}: SubcategoryMenuProps) => {
+const SubcategoryMenu = ({ category, open }: SubcategoryMenuProps) => {
   if (
     !open ||
     !category.subcategories ||
@@ -24,13 +19,7 @@ const SubcategoryMenu = ({
   const backgroundColor = category.color || "#f5f5f5";
 
   return (
-    <div
-      className="fixed z-100"
-      style={{
-        top: position.top,
-        left: position.left,
-      }}
-    >
+    <div className="absolute z-100 top-full left-0">
       {/* invisible bridge to maintain hover */}
       <div className="h-3 w-60" />
       <div

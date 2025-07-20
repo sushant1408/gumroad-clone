@@ -5,7 +5,7 @@ import { ProductSort } from "../components/product-sort";
 import { ProductsList, ProductsListLoading } from "../components/products-list";
 
 interface ProductsListViewProps {
-  category: string;
+  category?: string;
 }
 
 const ProductsListView = ({ category }: ProductsListViewProps) => {
