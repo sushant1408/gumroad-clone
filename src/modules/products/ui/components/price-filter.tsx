@@ -1,6 +1,8 @@
+import { ChangeEvent } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChangeEvent } from "react";
+import { formatCurrency } from "@/lib/utils";
 
 interface PriceFilterProps {
   minPrice?: string | null;
@@ -25,12 +27,7 @@ export function formatAsCurrency(value: string) {
     return "";
   }
 
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(numberValue);
+  return formatCurrency(numberValue);
 }
 
 const PriceFilter = ({

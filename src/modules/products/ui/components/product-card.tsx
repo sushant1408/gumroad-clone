@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MouseEvent } from "react";
 
+import { formatCurrency } from "@/lib/utils";
+
 interface ProductCardProps {
   id: string;
   name: string;
@@ -35,7 +37,7 @@ const ProductCard = ({
   };
 
   return (
-    <Link href={`/products/${id}`}>
+    <Link href={`/tenants/${tenantSlug}/products/${id}`}>
       <div className="border rounded-md bg-white overflow-hidden h-full flex flex-col hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow">
         <div className="relative aspect-square">
           <Image
@@ -70,14 +72,7 @@ const ProductCard = ({
         </div>
         <div className="p-4">
           <div className="relative px-2 py-1 border bg-pink-400 w-fit">
-            <p className="text-sm font-medium">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 2,
-              }).format(Number(price))}
-            </p>
+            <p className="text-sm font-medium">{formatCurrency(price)}</p>
           </div>
         </div>
       </div>
