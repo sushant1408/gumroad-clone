@@ -23,6 +23,12 @@ export const Products: CollectionConfig = {
       relationTo: "categories",
     },
     {
+      name: "tags",
+      type: "relationship",
+      relationTo: "tags",
+      hasMany: true,
+    },
+    {
       name: "image",
       type: "upload",
       relationTo: "media",
