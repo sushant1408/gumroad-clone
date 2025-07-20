@@ -6,9 +6,15 @@ import { ProductsList, ProductsListLoading } from "../components/products-list";
 
 interface ProductsListViewProps {
   category?: string;
+  tenantSlug?: string;
+  narrowView?: boolean;
 }
 
-const ProductsListView = ({ category }: ProductsListViewProps) => {
+const ProductsListView = ({
+  category,
+  tenantSlug,
+  narrowView,
+}: ProductsListViewProps) => {
   return (
     <div className="px-4 lg:px-12 py-8 flex flex-col gap-4">
       <div className="flex flex-col lg:flex-row lg:items-center gap-y-2 lg:gap-y-0 justify-between">
@@ -22,8 +28,12 @@ const ProductsListView = ({ category }: ProductsListViewProps) => {
         </div>
 
         <div className="lg:col-span-4 xl:col-span-6">
-          <Suspense fallback={<ProductsListLoading />}>
-            <ProductsList category={category} />
+          <Suspense fallback={<ProductsListLoading narrowView={narrowView} />}>
+            <ProductsList
+              category={category}
+              tenantSlug={tenantSlug}
+              narrowView={narrowView}
+            />
           </Suspense>
         </div>
       </div>
