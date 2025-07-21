@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { ShoppingCartIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -30,22 +30,22 @@ interface NavbarProps {
 
 const Navbar = ({ slug }: NavbarProps) => {
   const trpc = useTRPC();
-  const { data } = useQuery(trpc.tenants.getOne.queryOptions({ slug }));
+  const { data } = useSuspenseQuery(trpc.tenants.getOne.queryOptions({ slug }));
 
   return (
     <nav className="h-20 border-b font-medium bg-white">
       <div className="max-w-(--breakpoint-xl) mx-auto flex justify-between items-center h-full px-4 lg:px-12">
         <Link href={`/tenants/${slug}`} className="flex items-center gap-2">
-          {data?.image?.url && (
+          {data.image?.url && (
             <Image
               alt={slug}
-              src={data?.image?.url || ""}
+              src={data.image?.url || ""}
               width={32}
               height={32}
               className="rounded-full shrink-0 border size-[32px]"
             />
           )}
-          <p className="text-xl">{data?.name}</p>
+          <p className="text-xl">{data.name}</p>
         </Link>
         <CheckoutButton hideIfEmpty tenantSlug={slug} />
       </div>

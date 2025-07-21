@@ -1,7 +1,8 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { InboxIcon, LoaderIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -10,7 +11,6 @@ import { useCart } from "../../hooks/use-cart";
 import { useCheckoutStates } from "../../hooks/use-checkout-states";
 import { CheckoutItem } from "../components/checkout-item";
 import { CheckoutSidebar } from "../components/checkout-sidebar";
-import { useRouter } from "next/navigation";
 
 interface CheckoutViewProps {
   tenantSlug: string;
@@ -23,6 +23,7 @@ const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
   const [checkoutStates, setCheckoutStates] = useCheckoutStates();
 
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
   const { data, error, isLoading } = useQuery(
     trpc.checkout.getProducts.queryOptions({ ids: productIds })
   );
@@ -57,15 +58,29 @@ const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
   }, [error, clearCart]);
 
   useEffect(() => {
-    if (checkoutStates.success) {
-      setCheckoutStates({
-        cancel: false,
-        success: false,
-      });
-      clearCart();
-      router.push("/products");
-    }
-  }, [checkoutStates.success, setCheckoutStates, clearCart, router]);
+    const cleanupAndRedirect = async () => {
+      if (checkoutStates.success) {
+        setCheckoutStates({
+          cancel: false,
+          success: false,
+        });
+        clearCart();
+        await queryClient.invalidateQueries(
+          trpc.library.getMany.infiniteQueryFilter()
+        );
+        router.push("/library");
+      }
+    };
+
+    cleanupAndRedirect();
+  }, [
+    checkoutStates.success,
+    setCheckoutStates,
+    clearCart,
+    router,
+    queryClient,
+    trpc.library.getMany,
+  ]);
 
   if (isLoading) {
     return (

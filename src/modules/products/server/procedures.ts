@@ -1,5 +1,6 @@
 import type { Sort, Where } from "payload";
 import z from "zod";
+import { headers as nextHeaders } from "next/headers";
 
 import { DEFAULT_LIMIT } from "@/lib/constants";
 import { Category, Media, Tenant } from "@/payload-types";
@@ -118,16 +119,46 @@ export const productsRouter = createTRPCRouter({
   getOne: baseProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
+      const headers = await nextHeaders();
+      const session = await ctx.db.auth({ headers });
+
       const product = await ctx.db.findByID({
         collection: "products",
         id: input.id,
         depth: 2,
       });
 
+      let isPurchased = false;
+
+      if (session.user) {
+        const orderData = await ctx.db.find({
+          collection: "orders",
+          pagination: false,
+          limit: 1,
+          where: {
+            and: [
+              {
+                product: {
+                  equals: input.id,
+                },
+              },
+              {
+                user: {
+                  equals: session.user.id,
+                },
+              },
+            ],
+          },
+        });
+
+        isPurchased = !!orderData.docs[0];
+      }
+
       return {
         ...product,
         image: product.image as Media | null,
         tenant: product.tenant as Tenant & { image: Media | null },
+        isPurchased,
       };
     }),
 });

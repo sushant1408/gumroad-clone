@@ -5,29 +5,15 @@ import { InboxIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LIMIT } from "@/lib/constants";
-import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
-import { useProductFilters } from "../../hooks/use-product-filters";
 import { ProductCard, ProductCardLoading } from "./product-card";
 
-interface ProductsListProps {
-  category?: string;
-  tenantSlug?: string;
-  narrowView?: boolean;
-}
-
-const ProductsList = ({
-  category,
-  tenantSlug,
-  narrowView,
-}: ProductsListProps) => {
-  const [filters] = useProductFilters();
-
+const ProductsList = () => {
   const trpc = useTRPC();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery(
-      trpc.products.getMany.infiniteQueryOptions(
-        { ...filters, category, tenantSlug, limit: DEFAULT_LIMIT },
+      trpc.library.getMany.infiniteQueryOptions(
+        { limit: DEFAULT_LIMIT },
         {
           getNextPageParam: (lastPage) =>
             lastPage.docs.length > 0 ? lastPage.nextPage : undefined,
@@ -46,12 +32,7 @@ const ProductsList = ({
 
   return (
     <>
-      <div
-        className={cn(
-          "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
-          narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3"
-        )}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
         {data?.pages
           .flatMap((page) => page.docs)
           .map((product) => (
@@ -61,7 +42,6 @@ const ProductsList = ({
               name={product.name}
               imageUrl={product.image?.url}
               tenantSlug={product.tenant?.slug}
-              price={product.price}
               reviewCount={5}
               reviewRating={3}
               tenantImageUrl={product.tenant?.image?.url}
@@ -84,14 +64,9 @@ const ProductsList = ({
   );
 };
 
-const ProductsListLoading = ({ narrowView }: { narrowView?: boolean }) => {
+const ProductsListLoading = () => {
   return (
-    <div
-      className={cn(
-        "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
-        narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3"
-      )}
-    >
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
       {Array.from({ length: DEFAULT_LIMIT }).map((_, index) => (
         <ProductCardLoading key={index} />
       ))}
