@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 
 import { Categories } from "./collections/Categories";
 import { Media } from "./collections/Media";
+import { Orders } from "./collections/Orders";
 import { Products } from "./collections/Products";
 import { Tags } from "./collections/Tags";
 import { Tenants } from "./collections/Tenants";
@@ -26,7 +27,7 @@ export default buildConfig({
     },
   },
   cookiePrefix: "gumclone-payload",
-  collections: [Users, Media, Categories, Products, Tags, Tenants],
+  collections: [Users, Media, Categories, Products, Tags, Tenants, Orders],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

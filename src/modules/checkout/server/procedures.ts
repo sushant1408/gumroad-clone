@@ -1,8 +1,14 @@
 import { TRPCError } from "@trpc/server";
+import type Stripe from "stripe";
 import z from "zod";
 
 import { Media, Tenant } from "@/payload-types";
-import { baseProcedure, createTRPCRouter } from "@/trpc/init";
+import {
+  baseProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/trpc/init";
+import { stripe } from "@/lib/stripe";
 
 export const checkoutRouter = createTRPCRouter({
   getProducts: baseProcedure
@@ -39,5 +45,96 @@ export const checkoutRouter = createTRPCRouter({
           tenant: doc.tenant as Tenant & { image: Media | null },
         })),
       };
+    }),
+  purchase: protectedProcedure
+    .input(
+      z.object({
+        productIds: z.array(z.string()).min(1),
+        tenantSlug: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const products = await ctx.db.find({
+        collection: "products",
+        depth: 2,
+        where: {
+          and: [
+            {
+              id: { in: input.productIds },
+            },
+            {
+              "tenant.slug": { equals: input.tenantSlug },
+            },
+          ],
+        },
+      });
+
+      if (products.totalDocs !== input.productIds.length) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Products not found.",
+        });
+      }
+
+      const tanantsData = await ctx.db.find({
+        collection: "tenants",
+        limit: 1,
+        pagination: false,
+        where: {
+          slug: {
+            equals: input.tenantSlug,
+          },
+        },
+      });
+
+      const tenant = tanantsData.docs[0];
+
+      if (!tenant) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Tenant not found.",
+        });
+      }
+
+      const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+        products.docs.map((product) => ({
+          quantity: 1,
+          price_data: {
+            unit_amount: product.price * 100, // Stripe handles price in cents
+            currency: "usd",
+            product_data: {
+              name: product.name,
+              metadata: {
+                stripeAccountId: tenant.stripeAccountId,
+                id: product.id,
+                name: product.name,
+                price: product.price,
+              },
+            },
+          },
+        }));
+
+      const checkout = await stripe.checkout.sessions.create({
+        customer_email: ctx.session.user.email,
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/tenants/${input.tenantSlug}/checkout?success=true`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/tenants/${input.tenantSlug}/checkout?cancel=true`,
+        mode: "payment",
+        line_items: lineItems,
+        invoice_creation: {
+          enabled: true,
+        },
+        metadata: {
+          userId: ctx.session.user.id,
+        },
+      });
+
+      if (!checkout.url) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create checkout session",
+        });
+      }
+
+      return { url: checkout.url };
     }),
 });
