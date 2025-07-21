@@ -42,8 +42,8 @@ const ProductsList = () => {
               name={product.name}
               imageUrl={product.image?.url}
               tenantSlug={product.tenant?.slug}
-              reviewCount={5}
-              reviewRating={3}
+              reviewCount={product.reviewCount}
+              reviewRating={product.reviewRating}
               tenantImageUrl={product.tenant?.image?.url}
             />
           ))}
