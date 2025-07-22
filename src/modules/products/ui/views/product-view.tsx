@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { StarRating } from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, generateTenantURL } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 
 const CartButton = dynamic(
@@ -85,7 +85,7 @@ const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
 
               <div className="px-6 py-4 flex items-center justify-center lg:border-r">
                 <Link
-                  href={`/tenants/${tenantSlug}`}
+                  href={`${generateTenantURL(tenantSlug)}`}
                   className="flex items-center gap-2"
                 >
                   {data.tenant?.image?.url && (

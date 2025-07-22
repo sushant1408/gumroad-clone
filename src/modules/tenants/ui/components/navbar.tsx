@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { generateTenantURL } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 
 const CheckoutButton = dynamic(
@@ -35,7 +36,10 @@ const Navbar = ({ slug }: NavbarProps) => {
   return (
     <nav className="h-20 border-b font-medium bg-white">
       <div className="max-w-(--breakpoint-xl) mx-auto flex justify-between items-center h-full px-4 lg:px-12">
-        <Link href={`/tenants/${slug}`} className="flex items-center gap-2">
+        <Link
+          href={`${generateTenantURL(slug)}`}
+          className="flex items-center gap-2"
+        >
           {data.image?.url && (
             <Image
               alt={slug}

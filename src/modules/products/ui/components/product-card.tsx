@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MouseEvent } from "react";
 
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, generateTenantURL } from "@/lib/utils";
 
 interface ProductCardProps {
   id: string;
@@ -33,11 +33,11 @@ const ProductCard = ({
     e.preventDefault();
     e.stopPropagation();
 
-    router.push(`/tenants/${tenantSlug}`);
+    router.push(`${generateTenantURL(tenantSlug)}`);
   };
 
   return (
-    <Link href={`/tenants/${tenantSlug}/products/${id}`}>
+    <Link href={`${generateTenantURL(tenantSlug)}/products/${id}`}>
       <div className="border rounded-md bg-white overflow-hidden h-full flex flex-col hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-shadow">
         <div className="relative aspect-square">
           <Image
@@ -82,7 +82,7 @@ const ProductCard = ({
 
 const ProductCardLoading = () => {
   return (
-    <div className="w-full aspect-3/4 bg-neutral-200 rounded-lg animate-pulse"></div>
+    <div className="w-full aspect-3/4 bg-neutral-200 rounded-lg animate-pulse" />
   );
 };
 

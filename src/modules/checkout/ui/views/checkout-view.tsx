@@ -11,6 +11,7 @@ import { useCart } from "../../hooks/use-cart";
 import { useCheckoutStates } from "../../hooks/use-checkout-states";
 import { CheckoutItem } from "../components/checkout-item";
 import { CheckoutSidebar } from "../components/checkout-sidebar";
+import { generateTenantURL } from "@/lib/utils";
 
 interface CheckoutViewProps {
   tenantSlug: string;
@@ -114,8 +115,8 @@ const CheckoutView = ({ tenantSlug }: CheckoutViewProps) => {
                 isLast={index === array.length - 1}
                 imageUrl={product.image?.url}
                 name={product.name}
-                productUrl={`/tenants/${tenantSlug}/products/${product.id}`}
-                tenantUrl={`/tenants/${tenantSlug}`}
+                productUrl={`${generateTenantURL(tenantSlug)}/products/${product.id}`}
+                tenantUrl={`${generateTenantURL(tenantSlug)}`}
                 tenantName={product.tenant.name}
                 price={product.price}
                 onRemove={() => removeProduct(product.id)}
