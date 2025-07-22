@@ -32,7 +32,7 @@ const ProductCard = ({
             src={imageUrl || "/placeholder.png"}
           />
         </div>
-        <div className="p-4 border-y flex flex-col gap-3 flex-1">
+        <div className="p-4 border-t flex flex-col gap-3 flex-1">
           <h2 className="text-lg font-medium line-clamp-4">{name}</h2>
           <div className="flex items-center gap-2">
             {tenantImageUrl && (
