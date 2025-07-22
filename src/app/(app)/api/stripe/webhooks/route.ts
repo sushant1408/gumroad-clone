@@ -4,6 +4,7 @@ import { getPayload } from "payload";
 import type Stripe from "stripe";
 
 import { stripe } from "@/lib/stripe";
+import { ExpandedLineItem } from "@/modules/checkout/types";
 
 export async function POST(req: Request) {
   let event: Stripe.Event;
@@ -71,7 +72,8 @@ export async function POST(req: Request) {
             throw new Error("No line items found");
           }
 
-          const lineItems = expandedSession.line_items.data;
+          const lineItems = expandedSession.line_items
+            .data as ExpandedLineItem[];
 
           for (const item of lineItems) {
             await payload.create({
@@ -80,8 +82,8 @@ export async function POST(req: Request) {
                 stripeCheckoutSessionId: data.id,
                 stripeAccountId: event.account,
                 user: user.id,
-                product: item.price?.product?.metadata?.id,
-                name: item.price?.product?.name,
+                product: item.price.product.metadata.id,
+                name: item.price.product.name,
               },
             });
           }

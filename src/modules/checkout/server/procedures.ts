@@ -2,15 +2,16 @@ import { TRPCError } from "@trpc/server";
 import type Stripe from "stripe";
 import z from "zod";
 
+import { PLATFORM_FEE_PERCENTAGE } from "@/lib/constants";
+import { stripe } from "@/lib/stripe";
+import { generateTenantURL } from "@/lib/utils";
 import { Media, Tenant } from "@/payload-types";
 import {
   baseProcedure,
   createTRPCRouter,
   protectedProcedure,
 } from "@/trpc/init";
-import { stripe } from "@/lib/stripe";
-import { PLATFORM_FEE_PERCENTAGE } from "@/lib/constants";
-import { generateTenantURL } from "@/lib/utils";
+import { CheckoutMetadata, ProductMetadata } from "../types";
 
 export const checkoutRouter = createTRPCRouter({
   getProducts: baseProcedure
@@ -132,7 +133,7 @@ export const checkoutRouter = createTRPCRouter({
                 id: product.id,
                 name: product.name,
                 price: product.price,
-              },
+              } as ProductMetadata,
             },
           },
         }));
@@ -159,7 +160,7 @@ export const checkoutRouter = createTRPCRouter({
           },
           metadata: {
             userId: ctx.session.user.id,
-          },
+          } as CheckoutMetadata,
           payment_intent_data: {
             application_fee_amount: platformFeeAmount,
           },
