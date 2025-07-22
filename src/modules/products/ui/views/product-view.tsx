@@ -1,5 +1,6 @@
 "use client";
 
+import { RichText } from "@payloadcms/richtext-lexical/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { CheckCheckIcon, LinkIcon, StarIcon } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -120,7 +121,7 @@ const ProductView = ({ productId, tenantSlug }: ProductViewProps) => {
 
             <div className="p-6">
               {data.description ? (
-                <p className="">{data.description}</p>
+                <RichText data={data.description} />
               ) : (
                 <p className="font-medium text-muted-foreground italic">
                   No description provided
