@@ -5,9 +5,9 @@ import { useParams } from "next/navigation";
 
 import { DEFAULT_BG_COLOR } from "@/modules/home/constants";
 import { useTRPC } from "@/trpc/client";
-import { Categories } from "./categories";
-import { SearchInput } from "./search-input";
 import { BreadcrumbNavigation } from "./breadcrumb-navigation";
+import { Categories } from "./categories";
+import { SearchInput, SearchInputLoading } from "./search-input";
 
 const SearchFilters = () => {
   const trpc = useTRPC();
@@ -54,7 +54,7 @@ const SearchFiltersLoading = () => {
       className="px-4 lg:px-12 py-8 border-b flex flex-col gap-4 w-full"
       style={{ backgroundColor: DEFAULT_BG_COLOR }}
     >
-      <SearchInput disabled />
+      <SearchInputLoading />
       <div className="hidden lg:block">
         <div className="h-11" />
       </div>

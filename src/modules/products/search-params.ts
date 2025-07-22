@@ -8,6 +8,7 @@ import {
 const sortValues = ["curated", "trending", "hot_and_new"] as const;
 
 const searchParams = {
+  search: parseAsString.withDefault("").withOptions({ clearOnDefault: true }),
   sort: parseAsStringLiteral(sortValues)
     .withDefault("curated")
     .withOptions({ clearOnDefault: true }),

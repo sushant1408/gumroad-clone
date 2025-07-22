@@ -38,7 +38,7 @@ const ProductFilters = () => {
   const [filters, setFilters] = useProductFilters();
 
   const hasAnyFilters = Object.entries(filters).some(([key, value]) => {
-    if (key === "sort") {
+    if (key === "sort" || key === "search") {
       return false;
     }
 
@@ -55,6 +55,7 @@ const ProductFilters = () => {
 
   const onClear = () => {
     setFilters({
+      search: "",
       minPrice: "",
       maxPrice: "",
       tags: [],
