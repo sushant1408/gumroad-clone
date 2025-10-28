@@ -2,6 +2,46 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Environment Setup
+
+### Prerequisites
+Before running the project, you need to set up accounts and obtain API keys:
+
+1. **Stripe** (Payment Processing)
+   - Create account at https://dashboard.stripe.com
+   - Create a new project/application
+   - Copy your Secret Key (starts with `sk_test_` or `sk_live_`)
+   - Set up webhook endpoint for your local/production URL
+   - Copy your Webhook Secret (starts with `whsec_`)
+
+2. **MongoDB** (Database)
+   - Create account at https://www.mongodb.com/cloud/atlas
+   - Create a new cluster
+   - Copy your connection string (URI)
+
+3. **Vercel Blob** (File Storage)
+   - Create account at https://vercel.com
+   - Create a Blob storage token
+   - Copy your Read/Write token
+
+4. **Payload CMS** (Backend Configuration)
+   - Generate a secure random string for `PAYLOAD_SECRET`
+   - Can be generated with: `openssl rand -hex 12`
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+Then update `.env` with your actual credentials. See `.env.example` for all required variables:
+
+**Important**:
+- Never commit `.env` to version control - it contains secrets
+- For local development, subdomain routing can be disabled with `NEXT_PUBLIC_ENABLE_SUBDOMAIN_ROUTING=false`
+
 ## Project Overview
 
 **Gumroad Clone** is a full-stack marketplace SaaS platform built with Next.js 15, React 19, and TypeScript. It's a multi-tenant system where users can be both buyers (purchasing products) and sellers (creating their own product stores).
@@ -12,6 +52,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Payments:** Stripe integration
 - **Storage:** Vercel Blob for media uploads
 - **UI Components:** shadcn/ui + Radix UI primitives
+
+### Running After Setup
+
+Once environment variables are configured:
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Open http://localhost:3008 in your browser
+```
 
 ## Development Commands
 
@@ -444,3 +498,62 @@ Ensure webhook endpoint in `src/app/(app)/api/stripe/webhooks/route.ts` is publi
 
 - **Main Branch:** `main` (production-ready code)
 - **Git History:** Recent commits focused on stability and cleanup
+
+## Libraries & Dependencies
+
+### Core Framework & Runtime
+- `Next.js` (15.4.2) - React framework with server-side rendering and API routes
+- `React` (19.1.0) - UI library for building component-based interfaces
+- `React DOM` (19.1.0) - React rendering library for web browsers
+- `TypeScript` (^5) - Typed superset of JavaScript for type-safe development
+
+### Backend & Database
+- `Payload CMS` (^3.48.0) - Headless CMS with built-in admin UI
+- `@payloadcms/db-mongodb` (^3.48.0) - MongoDB adapter for Payload
+- `@payloadcms/next` (^3.48.0) - Next.js integration for Payload
+- `@payloadcms/plugin-multi-tenant` (^3.48.0) - Multi-tenancy support for Payload
+- `@payloadcms/richtext-lexical` (^3.48.0) - Rich text editor powered by Lexical
+- `@payloadcms/storage-vercel-blob` (^3.48.0) - Vercel Blob storage adapter for Payload
+- `@payloadcms/payload-cloud` (^3.48.0) - Payload Cloud integration
+
+### API & Data Fetching
+- `tRPC` (^11.4.3) - Type-safe API layer
+  - `@trpc/server` - Server-side procedures
+  - `@trpc/client` - Client-side hooks
+  - `@trpc/tanstack-react-query` - React Query integration
+- `@tanstack/react-query` (^5.83.0) - Server state management and caching
+- `superjson` (^2.2.2) - JSON serialization for complex types
+
+### UI Components & Styling
+- `Radix UI` (^1.x) - Unstyled, accessible component primitives
+  - Includes: Accordion, Alert Dialog, Avatar, Checkbox, Dialog, Dropdown Menu, Label, Popover, Progress, Radio Group, Scroll Area, Select, Separator, Slider, Switch, Tooltip, and more
+- `Tailwind CSS` (^4) - Utility-first CSS framework
+- `@tailwindcss/postcss` (^4) - PostCSS plugin for Tailwind
+- `Lucide React` (^0.525.0) - Icon library with React components
+- `Embla Carousel` (^8.6.0) - Carousel/slider component
+- `class-variance-authority` (^0.7.1) - CSS class composition utilities
+- `clsx` (^2.1.1) - Conditional className combining
+- `tailwind-merge` (^3.3.1) - Merge Tailwind CSS classes without conflicts
+
+### Forms & Validation
+- `React Hook Form` (^7.60.0) - Performant form library with hooks
+- `@hookform/resolvers` (^5.1.1) - Validation resolvers for React Hook Form
+- `Zod` (^4.0.5) - TypeScript-first schema validation
+
+### State Management
+- `Zustand` (^5.0.6) - Lightweight state management library
+- `nuqs` (^2.4.3) - URL search parameters state sync
+
+### Utilities & Integrations
+- `Stripe` (^18.3.0) - Payment processing SDK
+- `next-themes` (^0.4.6) - Theme switching (light/dark mode)
+- `sonner` (^2.0.6) - Toast notification library
+- `GraphQL` (^16.11.0) - Query language for APIs
+- `client-only` (^0.0.1) - Marker for client-only code
+- `server-only` (^0.0.1) - Marker for server-only code
+
+### Development Tools
+- `ESLint` (^9) - Code linting
+- `eslint-config-next` (15.4.2) - Next.js ESLint configuration
+- `@types packages` - TypeScript type definitions for Node.js, React, and React DOM
+- `tw-animate-css` (^1.3.5) - Tailwind CSS animation utilities
